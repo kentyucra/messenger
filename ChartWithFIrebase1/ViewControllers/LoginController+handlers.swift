@@ -28,9 +28,11 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 return
             }
             
-            let storageRef = Storage.storage().reference().child(uid + ".png")
+            let storageRef = Storage.storage().reference().child("profile_images").child(uid + ".png")
             
-            if let updloadData = self.profileImageView.image!.pngData() {
+            
+            
+            if let updloadData = self.profileImageView.image?.jpegData(compressionQuality: 0.1) {
                 storageRef.putData(updloadData, metadata: nil) { (metadata, error) in
                     guard let metadata = metadata else {
                         return
