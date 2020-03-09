@@ -61,11 +61,10 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             
             
         })
-        print(123)
     }
     
     func registerUserIntoDatabaseWithUID(uid: String, values: [String: AnyObject]) {
-        let ref =  Database.database().reference(fromURL: "https://ioschat-9261e.firebaseio.com")
+        let ref =  Database.database().reference()
         let userReference = ref.child("users").child(uid)
         
         userReference.updateChildValues(values) { Error, DatabaseReference in
@@ -91,8 +90,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        //print(info)
-        
         var selectedImageFromPicker: UIImage?
         
         if let editedImage = info[.editedImage] as? UIImage {
@@ -109,7 +106,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        print("canceled picker")
         dismiss(animated: true, completion: nil)
     }
 }

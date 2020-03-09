@@ -11,6 +11,12 @@ import Firebase
 
 class ChatLogController: UICollectionViewController, UITextFieldDelegate {
     
+    var user: User? {
+        didSet {
+            navigationItem.title = user?.name
+        }
+    }
+    
     lazy var inputTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Enter message..."
@@ -22,7 +28,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = "Chat Log Controller"
         collectionView.backgroundColor = .white
         
         setupInputComponents()
@@ -76,12 +81,18 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
     }
     
     @objc func handleSend() {
+        print("calling handleSend")
         let ref = Database.database().reference().child("messages")
         let childRef = ref.childByAutoId()
-        let values = ["test": inputTextField.text]
-        //update a new message under a different key
-        childRef.updateChildValues(values)
-        print(inputTextField.text)
+        let timestamp = Int(NSDate().timeIntervalSince1970)
+        if let textMessage = inputTextField.text, let toId = user?.id, let fromId = Auth.auth().currentUser?.uid {
+            let values = ["text": textMessage, "toId": toId, "fromId": fromId, "timestamp": timestamp] as [String : Any]
+            
+            //update a new message under a different key
+            childRef.updateChildValues(values)
+        } else {
+            assert(true, "unable to sent message, one of the indispensables values is null")
+        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

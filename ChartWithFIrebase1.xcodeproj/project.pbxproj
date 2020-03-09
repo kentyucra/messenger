@@ -16,6 +16,8 @@
 		99346836240973C200A69360 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99346835240973C200A69360 /* LoginController.swift */; };
 		993E2B3F240EDF760076E146 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993E2B3E240EDF760076E146 /* NewMessageController.swift */; };
 		993E2B42240EE4AB0076E146 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993E2B41240EE4AB0076E146 /* User.swift */; };
+		993FBC332416CABA006CAE24 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993FBC322416CABA006CAE24 /* Message.swift */; };
+		993FBC362416FEC8006CAE24 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993FBC352416FEC8006CAE24 /* UserCell.swift */; };
 		9969D4D9241463D2005566DA /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9969D4D8241463D2005566DA /* ChatLogController.swift */; };
 		99DBB1BD240B2F7D0078D072 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99DBB1BC240B2F7D0078D072 /* GoogleService-Info.plist */; };
 		99E7BAD12412D0210093BACB /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99E7BAD02412D0210093BACB /* Extensions.swift */; };
@@ -34,6 +36,8 @@
 		99346835240973C200A69360 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		993E2B3E240EDF760076E146 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
 		993E2B41240EE4AB0076E146 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		993FBC322416CABA006CAE24 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		993FBC352416FEC8006CAE24 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		9969D4D8241463D2005566DA /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
 		99DBB1BC240B2F7D0078D072 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		99E7BAD02412D0210093BACB /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -92,6 +96,7 @@
 		9934681E240966CF00A69360 /* ChartWithFIrebase1 */ = {
 			isa = PBXGroup;
 			children = (
+				993FBC342416FEB7006CAE24 /* View */,
 				99E7BACF2412D0040093BACB /* Helpers */,
 				993E2B40240EE4950076E146 /* Model */,
 				993468342409739C00A69360 /* ViewControllers */,
@@ -121,8 +126,17 @@
 			isa = PBXGroup;
 			children = (
 				993E2B41240EE4AB0076E146 /* User.swift */,
+				993FBC322416CABA006CAE24 /* Message.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		993FBC342416FEB7006CAE24 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				993FBC352416FEC8006CAE24 /* UserCell.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		99E7BACF2412D0040093BACB /* Helpers */ = {
@@ -252,10 +266,12 @@
 				9969D4D9241463D2005566DA /* ChatLogController.swift in Sources */,
 				993E2B3F240EDF760076E146 /* NewMessageController.swift in Sources */,
 				99346824240966CF00A69360 /* MessagesController.swift in Sources */,
+				993FBC332416CABA006CAE24 /* Message.swift in Sources */,
 				99F2F20F241154C500525D69 /* LoginController+handlers.swift in Sources */,
 				99346836240973C200A69360 /* LoginController.swift in Sources */,
 				993E2B42240EE4AB0076E146 /* User.swift in Sources */,
 				99346820240966CF00A69360 /* AppDelegate.swift in Sources */,
+				993FBC362416FEC8006CAE24 /* UserCell.swift in Sources */,
 				99E7BAD12412D0210093BACB /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

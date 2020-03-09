@@ -29,6 +29,7 @@ class NewMessageController: UITableViewController {
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let name = dictionary["name"] as? String, email = dictionary["email"] as? String, profileImageUrl = dictionary["profileImageUrl"] as? String
                 let user = User()
+                user.id = snapshot.key
                 user.name = name
                 user.email = email
                 user.profileImageUrl = profileImageUrl
@@ -66,56 +67,15 @@ class NewMessageController: UITableViewController {
         return 72
     }
     
+    var messageController: MessagesController?
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        dismiss(animated: true) {
+            let user = self.users[indexPath.row]
+            self.messageController?.showChatControllerWithUser(user: user)
+            print("dismiss vc")
+        }
+    }
+    
 }
 
-class UserCell: UITableViewCell {
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        //textLabel?.frame = CGRectMake(56, textLabel?.frame.origin.y, textLabel?.frame.origin.width, textLabel?.frame.origin.height  )
-        if let textLabel = textLabel, let detailTextLabel = detailTextLabel {
-            print(textLabel.frame)
-            //textLabel.frame = CGRect(x: 56, y: textLabel.frame.origin.y, width: textLabel.frame.size.width, height: textLabel.frame.size.width)
-            textLabel.frame.origin.x = 64
-            textLabel.frame.origin.y -= 2
-            
-            detailTextLabel.frame.origin.x = 64
-            detailTextLabel.frame.origin.y += 2
-        }
-        
-    }
-    
-    let profileImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "master")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        imageView.layer.cornerRadius = 24
-        imageView.layer.masksToBounds = true
-        imageView.contentMode = .scaleAspectFill
-        return imageView
-    }()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-        
-        addSubview(profileImageView)
-        
-        addConstraintsToProfileImageView()
-        
-    }
-    
-    func addConstraintsToProfileImageView() {
-        //need x, y, with, height anchors
-        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
-        profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        profileImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
-        profileImageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}

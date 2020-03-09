@@ -11,6 +11,10 @@ import Firebase
 
 class MessagesController: UITableViewController {
 
+    var messages  = [Message]()
+    var messagesDictionary  = [String: Message]()
+    let cellId = "cellId"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -18,10 +22,60 @@ class MessagesController: UITableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Message", style: .plain, target: self, action: #selector(handleNewMessage))
         
         checkIfUserIsLoggedIn()
+        
+        tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
+        
+        observeMessages()
     }
+    
+    func observeMessages() {
+        let ref = Database.database().reference().child("messages")
+        ref.observe(.childAdded) { (snapshot) in
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                let message = Message()
+                message.fromId = dictionary["fromId"] as? String
+                message.text = dictionary["text"] as? String
+                message.timestamp = dictionary["timestamp"] as? NSNumber
+                message.toId = dictionary["toId"] as? String
+                
+                self.messages.append(message)
+                if let toId = message.toId {
+                    self.messagesDictionary[toId] = message
+                    self.messages = Array(self.messagesDictionary.values)
+                    self.messages.sort { (msg1, msg2) -> Bool in
+                        return msg1.timestamp!.intValue > msg2.timestamp!.intValue
+                    }
+                }
+                
+                self.tableView.reloadData()
+                
+                //print(message.text ?? "no message")
+            }
+           
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 72
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return messages.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
+        
+        let message = messages[indexPath.row]
+        cell.message = message
+        
+        return cell
+    }
+    
     
     @objc func handleNewMessage() {
         let newMessageController = NewMessageController()
+        newMessageController.messageController = self
         let navController = UINavigationController(rootViewController: newMessageController)
         self.present(navController, animated: true, completion: nil)
     }
@@ -36,6 +90,7 @@ class MessagesController: UITableViewController {
         Database.database().reference().child("users").child(uid).observe(.value) { (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let user = User()
+                user.id = snapshot.key
                 user.name = dictionary["name"] as? String
                 user.email = dictionary["email"] as? String
                 user.profileImageUrl = dictionary["profileImageUrl"] as? String
@@ -88,13 +143,11 @@ class MessagesController: UITableViewController {
         nameLabel.rightAnchor.constraint(equalTo: titleView.rightAnchor).isActive = true
         nameLabel.topAnchor.constraint(equalTo: titleView.topAnchor).isActive = true
         nameLabel.bottomAnchor.constraint(equalTo: titleView.bottomAnchor).isActive = true
-        
-        
-        titleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatController)))
     }
     
-    @objc func showChatController() {
+    @objc func showChatControllerWithUser(user: User) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewLayout())
+        chatLogController.user = user
         navigationController?.pushViewController(chatLogController, animated: true)
     }
     
