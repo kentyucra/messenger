@@ -25,7 +25,44 @@ class MessagesController: UITableViewController {
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         
-        observeMessages()
+        //observeMessages()
+    }
+    
+    func observeUserMessages() {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("Does not exist current user")
+            return
+        }
+        
+        let ref = Database.database().reference().child("user-messages").child(uid)
+        ref.observe(.childAdded, with: { (snapshot) in
+            let messageId = snapshot.key
+            let messagesReference = Database.database().reference().child("messages").child(messageId)
+            
+            messagesReference.observeSingleEvent(of: .value, with: { (snapshot) in
+                //print(snapshot)
+                if let dictionary = snapshot.value as? [String: AnyObject] {
+                    let message = Message()
+                    message.fromId = dictionary["fromId"] as? String
+                    message.text = dictionary["text"] as? String
+                    message.timestamp = dictionary["timestamp"] as? NSNumber
+                    message.toId = dictionary["toId"] as? String
+                    
+                    //self.messages.append(message)
+                    if let toId = message.toId {
+                        self.messagesDictionary[toId] = message
+                        self.messages = Array(self.messagesDictionary.values)
+                        self.messages.sort { (msg1, msg2) -> Bool in
+                            return msg1.timestamp!.intValue > msg2.timestamp!.intValue
+                        }
+                    }
+                    
+                    self.tableView.reloadData()
+                    
+                    //print(message.text ?? "no message")
+                }
+            }, withCancel: nil)
+        }, withCancel: nil)
     }
     
     func observeMessages() {
@@ -38,7 +75,7 @@ class MessagesController: UITableViewController {
                 message.timestamp = dictionary["timestamp"] as? NSNumber
                 message.toId = dictionary["toId"] as? String
                 
-                self.messages.append(message)
+                //self.messages.append(message)
                 if let toId = message.toId {
                     self.messagesDictionary[toId] = message
                     self.messages = Array(self.messagesDictionary.values)
@@ -101,6 +138,11 @@ class MessagesController: UITableViewController {
     
     func setupNavbarWithUser(user: User) {
         //self.navigationItem.title = user.name
+        self.messages.removeAll()
+        self.messagesDictionary.removeAll()
+        self.tableView.reloadData()
+        
+        observeUserMessages()
         
         let titleView = UIView()
         

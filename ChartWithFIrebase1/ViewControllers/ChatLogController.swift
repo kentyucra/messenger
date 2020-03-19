@@ -89,7 +89,20 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
             let values = ["text": textMessage, "toId": toId, "fromId": fromId, "timestamp": timestamp] as [String : Any]
             
             //update a new message under a different key
-            childRef.updateChildValues(values)
+            childRef.updateChildValues(values) { (error, reference) in
+                if error != nil {
+                    print(error)
+                    return
+                }
+                
+                let userMessagesRef = Database.database().reference().child("user-messages").child(fromId)
+                let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId)
+                
+                if let messageId = childRef.key {
+                    userMessagesRef.updateChildValues([messageId:1])
+                    recipientUserMessagesRef.updateChildValues([messageId:1])
+                }
+            }
         } else {
             assert(true, "unable to sent message, one of the indispensables values is null")
         }
